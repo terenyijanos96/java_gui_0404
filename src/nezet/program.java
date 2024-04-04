@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -42,7 +43,7 @@ public class program extends javax.swing.JFrame {
         txtTartalom = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtBeolvasott = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jRadioButton1 = new javax.swing.JRadioButton();
@@ -78,7 +79,7 @@ public class program extends javax.swing.JFrame {
 
         jLabel3.setText("Beolvasás");
 
-        jTextField1.setEditable(false);
+        txtBeolvasott.setEditable(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -92,7 +93,7 @@ public class program extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(txtNev)
                     .addComponent(txtTartalom, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-                    .addComponent(jTextField1))
+                    .addComponent(txtBeolvasott))
                 .addContainerGap(149, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -109,7 +110,7 @@ public class program extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtBeolvasott, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(65, Short.MAX_VALUE))
         );
 
@@ -165,6 +166,11 @@ public class program extends javax.swing.JFrame {
         jMenu1.add(jMenu2);
 
         jMenuItem3.setText("Fájl beolvasás");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
 
         jMenuBar1.add(jMenu1);
@@ -194,19 +200,40 @@ public class program extends javax.swing.JFrame {
         String fajlNeve = txtNev.getText();
         String fajlTartaloma = txtTartalom.getText();
         String s = "";
-        
+
         Path path = Paths.get(fajlNeve);
         try {
             Files.write(path, fajlTartaloma.getBytes());
             s = "A %s kiírtam".formatted(fajlNeve);
         } catch (IOException ex) {
-            Logger.getLogger(program.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(program.class.getName()).log(Level.SEVERE, null, ex);
             s = "Nem sikerült a kiírás";
         } finally {
             JOptionPane.showConfirmDialog(rootPane, s);
         }
 
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser jfc = new JFileChooser();
+        int valasztas = jfc.showOpenDialog(rootPane);
+        String s = "";
+
+        if (valasztas == JFileChooser.APPROVE_OPTION) {
+            String fajlNev = jfc.getSelectedFile().getPath();
+            try {
+                String FajlTartalma = Files.readString(Paths.get(fajlNev));
+
+                s = FajlTartalma;
+            } catch (IOException ex) {
+                //Logger.getLogger(program.class.getName()).log(Level.SEVERE, null, ex);
+                s = "Nem sikerült a beolvasás";
+            } finally {
+                txtBeolvasott.setText(s);
+            }
+        }
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,7 +286,7 @@ public class program extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField txtBeolvasott;
     private javax.swing.JTextField txtNev;
     private javax.swing.JTextField txtTartalom;
     // End of variables declaration//GEN-END:variables
