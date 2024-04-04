@@ -20,6 +20,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
+import javax.swing.JRadioButton;
 
 /**
  *
@@ -44,6 +45,7 @@ public class program extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -57,6 +59,8 @@ public class program extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jCheckBox1 = new javax.swing.JCheckBox();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -147,7 +151,7 @@ public class program extends javax.swing.JFrame {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Választható szakok--", "Szoftverfejlesztő", "Valami xd" }));
 
-        jCheckBox1.setText("jCheckBox1");
+        jCheckBox1.setText("hírlevél");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -170,13 +174,22 @@ public class program extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setText("jRadioButton1");
+
+        buttonGroup1.add(jRadioButton2);
+        jRadioButton2.setText("jRadioButton2");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButton2)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(208, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -184,7 +197,11 @@ public class program extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton1)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton2)
+                .addContainerGap(83, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("konfig", jPanel1);
@@ -254,7 +271,7 @@ public class program extends javax.swing.JFrame {
         String fajlNeve = txtNev.getText();
         String fajlTartaloma = txtTartalom.getText();
         String s = "";
-        
+
         Path path = Paths.get(fajlNeve);
         try {
             Files.write(path, fajlTartaloma.getBytes());
@@ -273,12 +290,12 @@ public class program extends javax.swing.JFrame {
         JFileChooser jfc = new JFileChooser();
         int valasztas = jfc.showOpenDialog(rootPane);
         String s = "";
-        
+
         if (valasztas == JFileChooser.APPROVE_OPTION) {
             String fajlNev = jfc.getSelectedFile().getPath();
             try {
                 String FajlTartalma = Files.readString(Paths.get(fajlNev));
-                
+
                 s = FajlTartalma;
             } catch (IOException ex) {
                 //Logger.getLogger(program.class.getName()).log(Level.SEVERE, null, ex);
@@ -296,8 +313,10 @@ public class program extends javax.swing.JFrame {
             FileOutputStream fajlKi = new FileOutputStream("config.bin");
             ObjectOutputStream objKi = new ObjectOutputStream(fajlKi);
             objKi.writeObject(jCheckBox1);
-            objKi.writeObject(jComboBox1);            
-            
+            objKi.writeObject(jComboBox1);
+            objKi.writeObject(jRadioButton1);
+            objKi.writeObject(jRadioButton2);
+
             objKi.close();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(program.class.getName()).log(Level.SEVERE, null, ex);
@@ -314,13 +333,19 @@ public class program extends javax.swing.JFrame {
 
             FileInputStream fajlBe = new FileInputStream("config.bin");
             ObjectInputStream objBe = new ObjectInputStream(fajlBe);
-            
-            JCheckBox chb = (JCheckBox) objBe.readObject();
-            JComboBox cmb = (JComboBox) objBe.readObject();
-            jCheckBox1.setSelected(chb.isSelected());
-            jComboBox1.setSelectedIndex(cmb.getSelectedIndex());
+
+            JCheckBox checkbox = (JCheckBox) objBe.readObject();
+            JComboBox combobox = (JComboBox) objBe.readObject();
+            JRadioButton rdb1 = (JRadioButton) objBe.readObject();
+            JRadioButton rdb2 = (JRadioButton) objBe.readObject();
+
             objBe.close();
-            
+
+            jCheckBox1.setSelected(checkbox.isSelected());
+            jComboBox1.setSelectedIndex(combobox.getSelectedIndex());
+            jRadioButton1.setSelected(rdb1.isSelected());
+            jRadioButton2.setSelected(rdb2.isSelected());
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(program.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -367,6 +392,7 @@ public class program extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
@@ -385,6 +411,8 @@ public class program extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField txtBeolvasott;
     private javax.swing.JTextField txtNev;
